@@ -1,0 +1,15 @@
+BestestNestedSet
+==============
+
+This acts_as extension provides Nested Set functionality.  Nested Set is similiar to Tree, but with the added feature that you can select the children and all of their descendents with a single query.  A good use case for this is a threaded post system, where you want to display every reply to a comment without multiple selects.
+
+This is a modification of the normal acts_as_nested set provided by DHH.
+
+Usage is the same.  Provides ability to renumber children when swapping nodes around in your tree, as well as some more helpers like is_child_of?(parent) to see whether or not you're a child node.
+
+Example
+=======
+
+  class Product < ActiveRecord::Base
+    acts_as_nested_set
+  end
