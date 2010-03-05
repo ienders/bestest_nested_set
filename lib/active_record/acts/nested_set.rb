@@ -123,7 +123,7 @@ module ActiveRecord
             end
 
             def self.nested_set_do_node(node, top_rec)
-              node[left_col_name] = top_rec
+              node["#{configuration[:left_column]}"] = top_rec
               top_rec = top_rec + 1
 
               children = find :all, :conditions => { :#{configuration[:parent_column]} => node }
@@ -132,7 +132,7 @@ module ActiveRecord
                 children.each { |child| top_rec = self.nested_set_do_node(child, top_rec) }
               end
 
-              node[right_col_name] = top_rec
+              node["#{configuration[:right_column]}"] = top_rec
               top_rec = top_rec + 1
 
               node.save
