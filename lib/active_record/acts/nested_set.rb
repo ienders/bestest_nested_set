@@ -78,8 +78,9 @@ module ActiveRecord
         #   (if it hasn't already been added) and use that as the foreign key restriction. It's also possible 
         #   to give it an entire string that is interpolated if you need a tighter scope than just a foreign key.
         #   Example: <tt>acts_as_nested_set :scope => 'todo_list_id = #{todo_list_id} AND completed = 0'</tt>
+        # * +child_order+ - order clause for children.  Defaults to none.  Can be string like 'position ASC'.
         def acts_as_nested_set(options = {})
-          configuration = { :parent_column => "parent_id", :left_column => "lft", :right_column => "rgt", :scope => "1 = 1" }
+          configuration = { :parent_column => "parent_id", :left_column => "lft", :right_column => "rgt", :scope => "1 = 1", :child_order => '' }
 
           configuration.update(options) if options.is_a?(Hash)
 
@@ -103,6 +104,9 @@ module ActiveRecord
             include ActiveRecord::Acts::NestedSet::InstanceMethods
 
             after_save :renumber_nested_set_position
+
+            has_many :children, :class_name => '#{self.name}', :foreign_key => :#{configuration[:parent_column]} #{configuration[:child_order].blank? ? '' : ", :order => '#{configuration[:child_order]}'"}
+            belongs_to :parent, :class_name => '#{self.name}', :foreign_key => :#{configuration[:parent_column]}
 
             #{scope_condition_method}
 
